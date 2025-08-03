@@ -1,5 +1,5 @@
 import { Routes,Route } from "react-router-dom"
-import NavBar from "./components/ui/NavBar"
+import NavBar from "./components/ui/Navbar"
 import Createpage from "./pages/Createpage"
 import Homepage from "./pages/Homepage"
 import {Box,useColorModeValue} from '@chakra-ui/react'
