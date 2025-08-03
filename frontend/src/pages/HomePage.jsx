@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react'
+import React, { useEffect } from 'react';
 import { Text,Container, Heading, VStack,Box, Input, Button, SimpleGrid } from '@chakra-ui/react';
-import Createpage from './Createpage';
+import CreatePage from './CreatePage';
 import {Link} from "react-router-dom";
 import { useProductStore } from '../Store/Product';
 import { ProductCard } from '../components/ui/ProductCard';
