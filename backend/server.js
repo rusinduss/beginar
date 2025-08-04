@@ -2,36 +2,45 @@ import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import { connectDB } from './config/db.js';
-import product from './model/products.model.js';
-import productsroutes from './routes/products.routes.js'
-import path from "path";
+import productsroutes from './routes/products.routes.js';
+import path from 'path';
 
 dotenv.config();
-const app= express();
-const PORT=process.env.PORT || 5000;
 
+const app = express();
+const PORT = process.env.PORT || 5000;
 
+// Middleware to parse JSON request bodies
+app.use(express.json());
 
-app.use(express.json());//allows us to accept json data to req.body
+// API Routes
+app.use("/api/products", productsroutes);
 
-app.use("/api/products",productsroutes);
-
-//configuration for the deployment
+// Deployment Configuration
 const __dirname = path.resolve();
-if(process.env.NODE_ENV === "production"){
-    app.use(express.static(path.join(__dirname, "/frontend/dist")));//to make dist folder as static assest
-    
-    app.get("*", (req,res)=>{
-         console.log("Catch-all route triggered: ", req.url);
-        res.sendFile(path.resolve(__dirname,"frontend","dist","index.html"));
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "/frontend/dist")));
+
+  // Catch-all route to serve frontend for unknown paths
+  app.get("*", (req, res) => {
+    console.log("Catch-all route triggered: ", req.url);
+    res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
+  });
+}
+
+// Start Server after connecting to DB
+const startServer = async () => {
+  try {
+    await connectDB();
+
+    app.listen(PORT, '0.0.0.0', () => {
+      console.log(`✅ Server started at http://localhost:${PORT}`);
     });
-}
-console.log(process.env.MONGO_URI)
-connectDB();
-app.listen(PORT,'0.0.0.0',()=>{
-    
 
-    console.log("server started at http://localhost:" +PORT);
-}
-);
+  } catch (err) {
+    console.error("❌ Failed to start server:", err);
+    process.exit(1); // Exit with failure
+  }
+};
 
+startServer();
